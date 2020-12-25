@@ -1,17 +1,48 @@
 <?php
 
+use PHPUnit\Runner\Version as PHPUnitVersion;
+
 class ScenarioTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetHtml()
     {
-        $step1 = $this->getMockBuilder('\Codeception\Step')
-            ->setConstructorArgs(['Do some testing', ['arg1', 'arg2']])
-            ->setMethods(null)
-            ->getMock();
-        $step2 = $this->getMockBuilder('\Codeception\Step')
-            ->setConstructorArgs(['Do even more testing without args', []])
-            ->setMethods(null)
-            ->getMock();
+        if (version_compare(PHPUnitVersion::series(), '9.0', '<')) {
+            $step1 = $this->getMockBuilder('\Codeception\Step')
+                ->setConstructorArgs([
+                    'Do some testing',
+                    [
+                        'arg1',
+                        'arg2'
+                    ]
+                ])
+                ->setMethods(null)
+                ->getMock();
+            $step2 = $this->getMockBuilder('\Codeception\Step')
+                ->setConstructorArgs([
+                    'Do even more testing without args',
+                    []
+                ])
+                ->setMethods(null)
+                ->getMock();
+        } else {
+            $step1 = $this->getMockBuilder('\Codeception\Step')
+                ->setConstructorArgs([
+                    'Do some testing',
+                    [
+                        'arg1',
+                        'arg2'
+                    ]
+                ])
+                ->onlyMethods([])
+                ->getMock();
+            $step2 = $this->getMockBuilder('\Codeception\Step')
+                ->setConstructorArgs([
+                    'Do even more testing without args',
+                    []
+                ])
+                ->onlyMethods([])
+                ->getMock();
+        }
 
         $scenario = new \Codeception\Scenario(new \Codeception\Test\Cept('test', 'testCept.php'));
         $scenario->addStep($step1);

@@ -2,8 +2,8 @@
 
 use Codeception\Util\Stub;
 use Facebook\WebDriver\WebDriverBy;
-use Codeception\Util\Locator;
 use Codeception\Step;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 
 class StepTest extends \PHPUnit\Framework\TestCase
 {
@@ -13,7 +13,17 @@ class StepTest extends \PHPUnit\Framework\TestCase
      */
     protected function getStep($args)
     {
-        return $this->getMockBuilder('\Codeception\Step')->setConstructorArgs($args)->setMethods(null)->getMock();
+        if (version_compare(PHPUnitVersion::series(), '9.0', '<')) {
+            return $this->getMockBuilder('\Codeception\Step')
+                ->setConstructorArgs($args)
+                ->setMethods(null)
+                ->getMock();
+        }
+
+        return $this->getMockBuilder('\Codeception\Step')
+            ->setConstructorArgs($args)
+            ->onlyMethods([])
+            ->getMock();
     }
 
     public function testGetArguments()
