@@ -3,6 +3,7 @@ namespace Codeception\Test\Feature;
 
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\StrictCoverage;
+use PHPUnit\Runner\Version as PHPUnitVersion;
 
 trait CodeCoverage
 {
@@ -13,7 +14,12 @@ trait CodeCoverage
 
     public function codeCoverageStart()
     {
-        $codeCoverage = $this->getTestResultObject()->getCodeCoverage();
+        $testResult = $this->getTestResultObject();
+        if (version_compare(PHPUnitVersion::series(), '10.0', '<')) {
+            $codeCoverage = $testResult->getCodeCoverage();
+        } else {
+            $codeCoverage = $testResult->codeCoverage();
+        }
         if (!$codeCoverage) {
             return;
         }
@@ -22,7 +28,12 @@ trait CodeCoverage
 
     public function codeCoverageEnd($status, $time)
     {
-        $codeCoverage = $this->getTestResultObject()->getCodeCoverage();
+        $testResult = $this->getTestResultObject();
+        if (version_compare(PHPUnitVersion::series(), '10.0', '<')) {
+            $codeCoverage = $testResult->getCodeCoverage();
+        } else {
+            $codeCoverage = $testResult->codeCoverage();
+        }
         if (!$codeCoverage) {
             return;
         }
