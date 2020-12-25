@@ -12,14 +12,14 @@
             "homepage":"http://codegyre.com"
         }
     ],
-    "minimum-stability": "RC",
+    "minimum-stability": "beta",
 
     "require": {
         "php": ">=5.6.0 <9.0",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "codeception/lib-asserts": "^1.0",
+        "codeception/lib-asserts": "dev-phpunit-10 as 1.99.99",
         "guzzlehttp/psr7": "~1.4",
         "symfony/finder": ">=2.7 <6.0",
         "symfony/console": ">=2.7 <6.0",
@@ -27,8 +27,11 @@
         "symfony/yaml": ">=2.7 <6.0",
         "symfony/css-selector": ">=2.7 <6.0",
         "behat/gherkin": "^4.4.0",
-        "codeception/phpunit-wrapper": ">6.0.15 <6.1.0 | ^6.6.1 | ^7.7.1 | ^8.1.1 | ^9.0",
-        "codeception/stub": "^2.0 | ^3.0"
+        "codeception/phpunit-wrapper": "10.0.x-dev",
+        "codeception/stub": "^2.0 | ^3.0",
+        "phpunit/phpunit": "dev-master as 9.6.0",
+        "phpunit/php-code-coverage": "10.0.x-dev",
+        "sebastian/code-unit": "2.0.x-dev as 2.0.0"
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
@@ -37,7 +40,7 @@
         "vlucas/phpdotenv": "^2.0 | ^3.0 | ^4.0 | ^5.0",
         "symfony/process": ">=2.7 <6.0",
         "codeception/module-asserts": "*@dev",
-        "codeception/module-cli": "*@dev",
+        "codeception/module-cli": "dev-phpunit-10",
         "codeception/module-db": "*@dev",
         "codeception/module-filesystem": "*@dev",
         "codeception/module-phpbrowser": "*@dev",
