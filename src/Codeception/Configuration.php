@@ -67,7 +67,9 @@ class Configuration
      */
     public static $defaultConfig = [
         'actor_suffix'=> 'Tester',
+        'support_namespace' => null,
         'namespace'  => '',
+
         'include'    => [],
         'paths'      => [],
         'extends'    => null,
@@ -252,7 +254,7 @@ class Configuration
             self::$envsDir = $config['paths']['envs'];
         }
 
-        Autoload::addNamespace(self::$config['namespace'], self::supportDir());
+        Autoload::addNamespace(self::$config['namespace'] . '\\' . self::$config['support_namespace'], self::supportDir());
 
         self::loadBootstrap($config['bootstrap'], self::testsDir());
         self::loadSuites();
@@ -320,11 +322,12 @@ class Configuration
 
         // load global config
         $globalConf = $config['settings'];
-        foreach (['modules', 'coverage', 'namespace', 'groups', 'env', 'gherkin', 'extensions'] as $key) {
+        foreach (['modules', 'coverage', 'support_namespace', 'namespace', 'groups', 'env', 'gherkin', 'extensions'] as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }
         }
+
         $settings = self::mergeConfigs(self::$defaultSuiteSettings, $globalConf);
 
         // load suite config
@@ -350,7 +353,8 @@ class Configuration
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests']
             . DIRECTORY_SEPARATOR . $settings['path'] . DIRECTORY_SEPARATOR;
 
-
+        $settings['suite'] = $suite;
+        $settings['suite_namespace'] = $settings['namespace'] . '\\' . $suite;
 
         return $settings;
     }

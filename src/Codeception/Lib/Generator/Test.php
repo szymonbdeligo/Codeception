@@ -11,15 +11,14 @@ class Test
     use Shared\Classname;
 
     protected $template = <<<EOF
-<?php {{namespace}}
+<?php
+
+{{namespace}}
+
 class {{name}}Test extends \Codeception\Test\Unit
 {
 {{tester}}
     protected function _before()
-    {
-    }
-
-    protected function _after()
     {
     }
 
@@ -31,12 +30,17 @@ class {{name}}Test extends \Codeception\Test\Unit
 }
 EOF;
 
-    protected $testerTemplate = <<<EOF
-    /**
-     * @var \{{actorClass}}
-     */
+    protected $testerLegacyTemplate = <<<EOF
+
+    /** @var {{actorClass}}  */
     protected \${{actor}};
     
+EOF;
+
+    protected $testerTemplate = <<<EOF
+
+    protected {{actorClass}} \${{actor}};
+
 EOF;
 
 
@@ -52,15 +56,19 @@ EOF;
     public function produce()
     {
         $actor = $this->settings['actor'];
-        if ($this->settings['namespace']) {
-            $actor = $this->settings['namespace'] . '\\' . $actor;
+
+        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . ucfirst($this->settings['suite']) . '\\' . $this->name);
+
+        if ($ns) {
+            $ns .= "\nuse ". $this->supportNamespace() . $actor.";";
         }
 
-        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . $this->name);
+
+        $testerTemplate = (PHP_MAJOR_VERSION == 7) && (PHP_MINOR_VERSION < 4) ? $this->testerLegacyTemplate : $this->testerTemplate;
 
         $tester = '';
         if ($this->settings['actor']) {
-            $tester = (new Template($this->testerTemplate))
+            $tester = (new Template($testerTemplate))
             ->place('actorClass', $actor)
             ->place('actor', lcfirst(Configuration::config()['actor_suffix']))
             ->produce();
